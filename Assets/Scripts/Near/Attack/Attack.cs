@@ -34,35 +34,33 @@ public class Attack : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P) && !isRotatingToAttack && canAttack)
+        if (Input.GetMouseButtonDown(0) && !isRotatingToAttack && canAttack)
         {
-            TryAttack();
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f, enemyLayer))
+            {
+                float distance = Vector3.Distance(transform.position, hit.transform.position);
+                if (distance <= attackRange)
+                {
+                    TryAttack(hit.transform);
+                }
+            }
         }
     }
 
-    private void TryAttack()
+    private void TryAttack(Transform enemy)
     {
-        Collider[] hitEnemies = Physics.OverlapSphere(attackHitPoint.position, attackRange, enemyLayer);
+        Vector3 directionToEnemy = (enemy.position - transform.position).normalized;
+        float angle = Vector3.Angle(transform.forward, directionToEnemy);
 
-        foreach (Collider enemy in hitEnemies)
+        if (angle <= attackAngle / 2f)
         {
-            if (enemy.gameObject.layer != LayerMask.NameToLayer("Enemy"))
-                continue;
-
-            Vector3 directionToEnemy = (enemy.transform.position - transform.position).normalized;
-            float angle = Vector3.Angle(transform.forward, directionToEnemy);
-
-            if (angle <= attackAngle / 2f)
-            {
-                DoDamage(enemy.transform);
-                StartCoroutine(AttackCooldown());
-            }
-            else
-            {
-                StartCoroutine(RotateToEnemyAndAttack(enemy.transform));
-            }
-
-            break;
+            DoDamage(enemy);
+            StartCoroutine(AttackCooldown());
+        }
+        else
+        {
+            StartCoroutine(RotateToEnemyAndAttack(enemy));
         }
     }
 
@@ -107,7 +105,6 @@ public class Attack : MonoBehaviour
             {
                 finaldamage *= criticDamage;
                 Debug.Log($"¡Golpe crítico! Daño aumentado a {criticDamage}.");
-            
             }
 
             enemy.TakeDamage(finaldamage);
@@ -118,13 +115,11 @@ public class Attack : MonoBehaviour
             Instantiate(hitEffect, enemyTransform.position, Quaternion.identity);
         }
 
-
         /* if (audioSource != null && attackSound != null)
-        //     audioSource.PlayOneShot(attackSound);
-
+             audioSource.PlayOneShot(attackSound);
         
-        // if (animator != null)
-        /    animator.SetTrigger("Attack");*/
+           if (animator != null)
+             animator.SetTrigger("Attack");*/
 
         Debug.Log($"Ataque exitoso a {enemyTransform.name} con {damage} de daño.");
     }

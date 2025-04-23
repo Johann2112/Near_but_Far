@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleDash()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && canDash)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
             StartCoroutine(Dash());
         }
