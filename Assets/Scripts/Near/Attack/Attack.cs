@@ -14,6 +14,7 @@ public class Attack : MonoBehaviour
     [SerializeField] private float hitSpeedToMove;
     [SerializeField] private float criticChance;
     [SerializeField] private float criticDamage;
+    [SerializeField] private GameObject slashEffect;
 
     [Header("Efectos")]
     [SerializeField] private AudioClip attackSound;
@@ -115,11 +116,14 @@ public class Attack : MonoBehaviour
             Instantiate(hitEffect, enemyTransform.position, Quaternion.identity);
         }
 
-        /* if (audioSource != null && attackSound != null)
-             audioSource.PlayOneShot(attackSound);
-        
-           if (animator != null)
-             animator.SetTrigger("Attack");*/
+        if (slashEffect != null)
+        {
+            Vector3 spawnPosition = attackHitPoint.position;
+            Quaternion spawnRotation = Quaternion.LookRotation(transform.forward) * Quaternion.Euler(0, 180f, 0);
+
+            GameObject effect = Instantiate(slashEffect, spawnPosition, spawnRotation);
+            Destroy(effect, attackCooldownTime);
+        }
 
         Debug.Log($"Ataque exitoso a {enemyTransform.name} con {damage} de daño.");
     }
