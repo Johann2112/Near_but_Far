@@ -8,4 +8,10 @@ public class FloatingText : MonoBehaviour
     {
         Destroy(gameObject, duration);
     }
+
+    public float Duration
+    {
+        get { return duration; }
+        set { duration = value; }
+    }
 }

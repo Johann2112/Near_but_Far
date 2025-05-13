@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections;
 public class Attack : MonoBehaviour
 {
     [Header("Parámetros de ataque")]
@@ -12,8 +12,6 @@ public class Attack : MonoBehaviour
     [SerializeField] private float rotationSpeed = 720f;
     [SerializeField] private GameObject hitEffect;
     [SerializeField] private float hitSpeedToMove;
-    [SerializeField] private float criticChance;
-    [SerializeField] private float criticDamage;
     [SerializeField] private GameObject slashEffect;
 
     [Header("Efectos")]
@@ -22,14 +20,14 @@ public class Attack : MonoBehaviour
 
     private AudioSource audioSource;
     private Transform targetEnemy;
-    private PlayerController playerMovement;
+    private NearMovement nearMovement;
 
     private bool isRotatingToAttack = false;
     private bool canAttack = true;
 
     private void Start()
     {
-        playerMovement = GetComponent<PlayerController>();
+        nearMovement = GetComponent<NearMovement>();
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -65,13 +63,12 @@ public class Attack : MonoBehaviour
         }
     }
 
-    private System.Collections.IEnumerator RotateToEnemyAndAttack(Transform enemy)
+    private IEnumerator RotateToEnemyAndAttack(Transform enemy)
     {
         isRotatingToAttack = true;
         canAttack = false;
 
-        playerMovement.canMove = false;
-        playerMovement.GetComponent<UnityEngine.AI.NavMeshAgent>().isStopped = true;
+        nearMovement.CanMove = false;
 
         Vector3 direction = (enemy.position - transform.position).normalized;
         direction.y = 0f;
@@ -89,8 +86,7 @@ public class Attack : MonoBehaviour
 
         yield return new WaitForSeconds(hitSpeedToMove);
 
-        playerMovement.canMove = true;
-        playerMovement.GetComponent<UnityEngine.AI.NavMeshAgent>().isStopped = false;
+        nearMovement.CanMove = true;
         isRotatingToAttack = false;
     }
 
@@ -99,15 +95,7 @@ public class Attack : MonoBehaviour
         Enemy enemy = enemyTransform.GetComponent<Enemy>();
         if (enemy != null)
         {
-            bool isCritic = Random.Range(0f, 1f) < criticChance;
             float finaldamage = damage;
-
-            if (isCritic)
-            {
-                finaldamage *= criticDamage;
-                Debug.Log($"¡Golpe crítico! Daño aumentado a {criticDamage}.");
-            }
-
             enemy.TakeDamage(finaldamage);
         }
 
@@ -128,7 +116,7 @@ public class Attack : MonoBehaviour
         Debug.Log($"Ataque exitoso a {enemyTransform.name} con {damage} de daño.");
     }
 
-    private System.Collections.IEnumerator AttackCooldown()
+    private IEnumerator AttackCooldown()
     {
         canAttack = false;
         yield return new WaitForSeconds(attackCooldownTime);
@@ -140,7 +128,27 @@ public class Attack : MonoBehaviour
         if (attackHitPoint != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(attackHitPoint.position, attackRange);
+            DrawCircle(attackHitPoint.position, attackRange, Vector3.up);
+        }
+    }
+
+    public float AttackDamage
+    {
+        get { return damage; }
+        set { damage = value; }
+    }
+
+    void DrawCircle(Vector3 center, float radius, Vector3 normal, int segmentos = 64)
+    {
+        Quaternion rot = Quaternion.FromToRotation(Vector3.up, normal.normalized);
+        Vector3 prevPoint = center + rot * (Vector3.forward * radius);
+
+        for (int i = 1; i <= segmentos; i++)
+        {
+            float angle = 360f * i / segmentos;
+            Vector3 newPoint = center + rot * (Quaternion.Euler(0f, angle, 0f) * Vector3.forward * radius);
+            Gizmos.DrawLine(prevPoint, newPoint);
+            prevPoint = newPoint;
         }
     }
 }
