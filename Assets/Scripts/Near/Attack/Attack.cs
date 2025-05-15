@@ -110,7 +110,7 @@ public class Attack : MonoBehaviour
             Quaternion spawnRotation = Quaternion.LookRotation(transform.forward) * Quaternion.Euler(0, 180f, 0);
 
             GameObject effect = Instantiate(slashEffect, spawnPosition, spawnRotation);
-            Destroy(effect, attackCooldownTime);
+            Destroy(effect, attackCooldownTime -0.5f);
         }
 
         Debug.Log($"Ataque exitoso a {enemyTransform.name} con {damage} de daño.");

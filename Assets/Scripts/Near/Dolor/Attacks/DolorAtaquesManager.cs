@@ -48,6 +48,9 @@ public class DolorAtaquesManager : MonoBehaviour
     [SerializeField] private float attack1Radius; //Radio de ataque del ataque 1
     private bool attack1OnCooldown = false;
     [SerializeField] private Image attack1CooldownImage; //Imagen de cooldown del ataque 1
+    [SerializeField] private GameObject attack1Effect; //Efectos del ataque 1
+    private GameObject attack1Effect1;
+    private GameObject attack1Effect2;
     #endregion
 
     #region Teclas Ataque 2 Danse Fatale
@@ -63,6 +66,8 @@ public class DolorAtaquesManager : MonoBehaviour
     [SerializeField] Vector3 boxSize = new Vector3(1f, 1f, 1f); //Tamaño del area de ataque del ataque 2
     private bool attack2OnCooldown = false;
     [SerializeField] private Image attack2CooldownImage; //Imagen de cooldown del ataque 2
+    [SerializeField] private GameObject attack2Effect; //Efectos del ataque 2
+    private GameObject attack2Effect1;
     #endregion
 
     #region Teclas Ataque 3 Coupure Mortelle
@@ -77,6 +82,8 @@ public class DolorAtaquesManager : MonoBehaviour
     [SerializeField] private Vector3 boxSize3 = new Vector3(1f, 1f, 1f); //Tamaño del area de ataque del ataque 3
     private bool attack3OnCooldown = false;
     [SerializeField] private Image attack3CooldownImage; //Imagen de cooldown del ataque 3
+    [SerializeField] private GameObject attack3Effect; //Efectos del ataque 3
+    private GameObject attack3Effect1;
     #endregion
 
     #region Teclas Ataque 4 La mort à l'envers
@@ -91,6 +98,8 @@ public class DolorAtaquesManager : MonoBehaviour
     [SerializeField] private Vector3 boxSize4 = new Vector3(1f, 1f, 1f); //Tamaño del area de ataque del ataque 4
     private bool attack4OnCooldown = false;
     [SerializeField] private Image attack4CooldownImage; //Imagen de cooldown del ataque 4
+    [SerializeField] private GameObject attack4Effect; //Efectos del ataque 4
+    private GameObject attack4Effect1;
     #endregion
 
     #endregion
@@ -453,10 +462,24 @@ public class DolorAtaquesManager : MonoBehaviour
 
         HashSet<Enemy> EnemyHit = new HashSet<Enemy>();
 
+
+        if (attack1Effect != null)
+        {
+            attack1Effect1 = Instantiate(attack1Effect, Dolor.transform.position, Quaternion.identity);
+
+            attack1Effect2 = Instantiate(attack1Effect, Dolor.transform.position, Quaternion.identity);
+            attack1Effect2.transform.rotation = Quaternion.Euler(0, 180f,0);
+        }
+
+
+
         while (Vector3.Distance(Dolor.transform.position, targetPos) > 0.1f)
         {
             Dolor.transform.position = Vector3.MoveTowards(Dolor.transform.position, targetPos, movementSpeed * Time.deltaTime);
             Dolor.transform.Rotate(0, spinSpeed * Time.deltaTime, 0, Space.Self);
+            attack1Effect1.transform.position = Dolor.transform.position;
+            attack1Effect2.transform.position = Dolor.transform.position;
+
 
             Collider[] colliders = Physics.OverlapSphere(Dolor.transform.position, attack1Radius);
 
@@ -474,6 +497,8 @@ public class DolorAtaquesManager : MonoBehaviour
 
 
         }
+        Destroy(attack1Effect1, 0.3f);
+        Destroy(attack1Effect2, 0.3f);
         dolorManager.UnidadesValor -= attack1StocksUsed;
         attack1Cooldown = 0;
         attack1OnCooldown = true;
@@ -520,6 +545,12 @@ public class DolorAtaquesManager : MonoBehaviour
 
             if (Dolor.activeSelf)
             {
+                Vector3 spawnPosition = Dolor.transform.position + Dolor.transform.forward * 1f;
+                attack2Effect1 = Instantiate(attack2Effect, spawnPosition, Quaternion.identity);
+                attack2Effect1.transform.rotation = Dolor.transform.rotation * Quaternion.Euler(0, 180, 0);
+                attack2Effect1.transform.localScale = new Vector3(1.5f, 1, 1.5f);
+
+
                 foreach (Collider col in colliders)
                 {
                     Debug.Log("Detectado: " + col.gameObject.name);
@@ -531,6 +562,7 @@ public class DolorAtaquesManager : MonoBehaviour
                 }
                 Debug.Log("Ataque 2 número: " + i);
                 yield return new WaitForSeconds(0.2f);
+                Destroy(attack2Effect1);
             }
             else
             {
@@ -572,6 +604,9 @@ public class DolorAtaquesManager : MonoBehaviour
         Vector3 center = Dolor.transform.TransformPoint(boxCenter);
 
         Collider[] colliders = Physics.OverlapBox(center, boxSize3 * 0.5f, Dolor.transform.rotation);
+        attack3Effect1 = Instantiate(attack3Effect, Dolor.transform.position, Quaternion.identity);
+        attack3Effect1.transform.rotation = Dolor.transform.rotation * Quaternion.Euler(25, 180, 0);
+        attack3Effect1.transform.localScale = new Vector3(2, 1, 2);
 
         foreach (Collider col in colliders)
         {
@@ -584,6 +619,7 @@ public class DolorAtaquesManager : MonoBehaviour
                 Debug.Log("Lanzando enemigo hacia arriba con " + attack3ThrowingForce + " de fuerza");
             }
         }
+        Destroy(attack3Effect1, 0.3f);
         dolorManager.UnidadesValor -= attack3StocksUsed;
         attack3Cooldown = 0;
         attack3OnCooldown = true;
@@ -615,6 +651,12 @@ public class DolorAtaquesManager : MonoBehaviour
         Dolor.transform.rotation = targetRotation;
         Vector3 center = Dolor.transform.TransformPoint(boxCenter);
         Collider[] colliders = Physics.OverlapBox(center, boxSize4 * 0.5f, Dolor.transform.rotation);
+        attack4Effect1 = Instantiate(attack4Effect, Dolor.transform.position, Quaternion.identity);
+        attack4Effect1.transform.position = Dolor.transform.position + new Vector3(0,1,0);
+        attack4Effect1.transform.rotation = Dolor.transform.rotation * Quaternion.Euler(-25, 180, 0);
+        attack4Effect1.transform.localScale = new Vector3(3, 1, 3.3f);
+
+
         foreach (Collider col in colliders)
         {
             Debug.Log("Detectado: " + col.gameObject.name + "Jalandolo hacia Dolor");
@@ -625,6 +667,7 @@ public class DolorAtaquesManager : MonoBehaviour
                 enemy.Pull(attack4PullingForce, Dolor);
             }
         }
+        Destroy(attack4Effect1, 0.3f);
         dolorManager.UnidadesValor -= attack4StocksUsed;
         attack4Cooldown = 0;
         attack4OnCooldown = true;

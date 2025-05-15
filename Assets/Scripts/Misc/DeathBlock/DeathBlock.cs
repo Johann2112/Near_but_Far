@@ -17,4 +17,19 @@ public class DeathBlock : MonoBehaviour
             }
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Jugador detectado");
+            NearLife nearLife = collision.gameObject.GetComponent<NearLife>();
+            if (nearLife != null)
+            {
+                nearLife.TakeDamage(damage);
+                Debug.Log("Se le bajo a Near " + damage + " de vida");
+            }
+        }
+    }
 }
+

@@ -86,25 +86,54 @@ public class Inventario : MonoBehaviour
     private void Update()
     {
         #region Uso de Rencor Fragmentado (Ataque+)
+        if (rencorFragmentadoImage != null)
+        {
+            if (rencorFragmentadoAmount >= 1)
+            {
+                rencorFragmentadoImage.fillAmount = 0f;
+            }
+
+        }
+        
         if (Input.GetKeyDown(rencorFragmentadoKey) && rencorFragmentadoAmount > 0 && canUseItems)
         {
             rencorFragmentadoAmount--;
             UseRencorFragmentado();
+            rencorFragmentadoImage.fillAmount = tiempoRencorFragmentado;
         }
         #endregion
 
         #region Uso de Luto Fragmentado (Defensa+)
+        if (lutoFragmentadoImage != null)
+        {
+            if (lutoFragmentadoAmount >= 1)
+            {
+                lutoFragmentadoImage.fillAmount = 0f;
+            }
+        }
+
         if (Input.GetKeyDown(lutoFragmentadoKey) && lutoFragmentadoAmount > 0 && canUseItems)
         {
+            lutoFragmentadoAmount--;
             UseLutoFragmentado();
+            lutoFragmentadoImage.fillAmount = tiempoLutoFragmentado;
         }
         #endregion
 
         #region Uso de Desesperacion Fragmentada (Velocidad+)
+        if (desesperacionFragmentadaImage != null)
+        {
+            if (desesperacionFragmentadaAmount >= 1)
+            {
+                desesperacionFragmentadaImage.fillAmount = 0f;
+            }
+        }
+
         if (Input.GetKeyDown(desesperacionFragmentadaKey) && desesperacionFragmentadaAmount > 0 && canUseItems)
         {
             desesperacionFragmentadaAmount--;
             UseDesesperacionFragmentada();
+            desesperacionFragmentadaImage.fillAmount = tiempoDesesperacionFragmentada;
         }
         #endregion
     }
@@ -116,7 +145,7 @@ public class Inventario : MonoBehaviour
         {
             rencorFragmentadoAmount++;
 
-            Destroy(other);
+            //Destroy(other);
         }
         #endregion
 
@@ -124,7 +153,7 @@ public class Inventario : MonoBehaviour
         if (other.CompareTag("Frag2"))
         {
             lutoFragmentadoAmount++;
-            Destroy(other);
+            //Destroy(other);
         }
         #endregion
 
@@ -132,7 +161,7 @@ public class Inventario : MonoBehaviour
         if (other.CompareTag("Frag3"))
         {
             desesperacionFragmentadaAmount++;
-            Destroy(other);
+            //Destroy(other);
         }
         #endregion
     }
@@ -144,18 +173,22 @@ public class Inventario : MonoBehaviour
 
         float OriginalDamage = attack.AttackDamage;
 
-        float ActualDamage;
+        float ActualDamage; ActualDamage = attack.AttackDamage *= valorAtaqueAunmentado;
 
-        ActualDamage = attack.AttackDamage *= valorAtaqueAunmentado;
+        StartCoroutine(UpdateFillAmount(rencorFragmentadoImage, tiempoRencorFragmentado));
 
         StartCoroutine(UseRencor(tiempoRencorFragmentado, ActualDamage, OriginalDamage));
-    }
+    
+}
 
     private IEnumerator UseRencor(float time, float damage, float originalDamage)
     {
         attack.AttackDamage = damage;
+
         yield return new WaitForSeconds(time);
+
         attack.AttackDamage = originalDamage;
+
         canUseItems = true;
 
     }
@@ -164,21 +197,29 @@ public class Inventario : MonoBehaviour
     #region Funcionamiento de Luto Fragmentado
     private void UseLutoFragmentado()
     {
+        canUseItems = false;
+
         float OriginalDefense = nearLife.Defense;
+
         float ActualDefense;
 
         ActualDefense = nearLife.Defense *= valorDefensaAumentado;
 
         StartCoroutine(UseLuto(tiempoLutoFragmentado, ActualDefense, OriginalDefense));
 
+        StartCoroutine(UpdateFillAmount(lutoFragmentadoImage, tiempoLutoFragmentado));
     }
 
     private IEnumerator UseLuto(float time, float defence, float originalDefence)
     {
         canUseItems = false;
+
         nearLife.Defense = defence;
+
         yield return new WaitForSeconds(time);
+
         nearLife.Defense = originalDefence;
+
         canUseItems = true;
     }
     #endregion
@@ -197,6 +238,7 @@ public class Inventario : MonoBehaviour
         ActualDashSpeed = nearMovement.DashSpeed *= valorVelocidadAumentada;
 
         StartCoroutine(UsoDesesperacion(tiempoDesesperacionFragmentada, ActualSpeed, OriginalSpeed, ActualDashSpeed, OriginalDashSpeed));
+        StartCoroutine(UpdateFillAmount(desesperacionFragmentadaImage, tiempoDesesperacionFragmentada));
     }
 
     private IEnumerator UsoDesesperacion(float time, float speed, float originalSpeed, float dashSpeed, float originalDashSpeed)
@@ -210,6 +252,22 @@ public class Inventario : MonoBehaviour
         nearMovement.MoveSpeed = originalSpeed;
         canUseItems = true;
 
+    }
+    #endregion
+
+    #region Funciones Utiles
+    private IEnumerator UpdateFillAmount(Image image, float duration)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            image.fillAmount = 1f - (elapsedTime / duration);
+            yield return null;
+        }
+
+        image.fillAmount = 1f;
     }
     #endregion
 }

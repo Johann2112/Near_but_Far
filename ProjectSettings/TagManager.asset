@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - TextUnits
+  - Frag1
+  - Frag2
+  - Frag3
   layers:
   - Default
   - TransparentFX
@@ -16,7 +19,7 @@ TagManager:
   - Floor
   - Enemy
   - Dolor
-  - 
+  - Ignorar
   - 
   - 
   - 
