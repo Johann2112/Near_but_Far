@@ -14,6 +14,7 @@ public class Attack : MonoBehaviour
     [SerializeField] private float hitSpeedToMove;
     [SerializeField] private GameObject slashEffect;
 
+
     [Header("Efectos")]
     [SerializeField] private AudioClip attackSound;
     [SerializeField] private Animator animator;
@@ -138,7 +139,7 @@ public class Attack : MonoBehaviour
         set { damage = value; }
     }
 
-    void DrawCircle(Vector3 center, float radius, Vector3 normal, int segmentos = 64)
+    private void DrawCircle(Vector3 center, float radius, Vector3 normal, int segmentos = 64)
     {
         Quaternion rot = Quaternion.FromToRotation(Vector3.up, normal.normalized);
         Vector3 prevPoint = center + rot * (Vector3.forward * radius);
