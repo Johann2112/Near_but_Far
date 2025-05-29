@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+
 public class Attack : MonoBehaviour
 {
     [Header("Parámetros de ataque")]
@@ -8,123 +9,87 @@ public class Attack : MonoBehaviour
     [SerializeField] private float damage = 10f;
     [SerializeField] private float attackCooldownTime = 1.2f;
     [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private GameObject hitEffect;
+    [SerializeField] private float slashDuration = 0.7f;
+    [SerializeField] private GameObject slashEffect;
     [SerializeField, Range(0f, 180f)] private float attackAngle = 60f;
     [SerializeField] private float rotationSpeed = 720f;
-    [SerializeField] private GameObject hitEffect;
-    [SerializeField] private float hitSpeedToMove;
-    [SerializeField] private GameObject slashEffect;
 
-
-    [Header("Efectos")]
-    [SerializeField] private AudioClip attackSound;
-    [SerializeField] private Animator animator;
-
-    private AudioSource audioSource;
-    private Transform targetEnemy;
-    private NearMovement nearMovement;
-
-    private bool isRotatingToAttack = false;
     private bool canAttack = true;
+    private NearMovement nearMovement;
 
     private void Start()
     {
         nearMovement = GetComponent<NearMovement>();
-        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !isRotatingToAttack && canAttack)
+        if (Input.GetMouseButtonDown(0) && canAttack)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, enemyLayer))
-            {
-                float distance = Vector3.Distance(transform.position, hit.transform.position);
-                if (distance <= attackRange)
-                {
-                    TryAttack(hit.transform);
-                }
-            }
+            StartCoroutine(AttackRoutine());
         }
     }
 
-    private void TryAttack(Transform enemy)
+    private IEnumerator AttackRoutine()
     {
-        Vector3 directionToEnemy = (enemy.position - transform.position).normalized;
-        float angle = Vector3.Angle(transform.forward, directionToEnemy);
+        canAttack = false;
+        if (nearMovement != null)
+            nearMovement.CanRotate = false;
 
-        if (angle <= attackAngle / 2f)
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        Vector3 targetPoint;
+
+        if (Physics.Raycast(ray, out hit, 100f))
         {
-            DoDamage(enemy);
-            StartCoroutine(AttackCooldown());
+            targetPoint = hit.point;
         }
         else
         {
-            StartCoroutine(RotateToEnemyAndAttack(enemy));
+            var ground = new Plane(Vector3.up, transform.position);
+            if (ground.Raycast(ray, out float enter))
+                targetPoint = ray.GetPoint(enter);
+            else
+                targetPoint = transform.position + transform.forward * attackRange;
         }
-    }
 
-    private IEnumerator RotateToEnemyAndAttack(Transform enemy)
-    {
-        isRotatingToAttack = true;
-        canAttack = false;
-
-        nearMovement.CanMove = false;
-
-        Vector3 direction = (enemy.position - transform.position).normalized;
-        direction.y = 0f;
-
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-        while (Quaternion.Angle(transform.rotation, targetRotation) > 1f)
+        Vector3 dir = (targetPoint - transform.position);
+        dir.y = 0;
+        var targetRot = Quaternion.LookRotation(dir);
+        while (Quaternion.Angle(transform.rotation, targetRot) > 1f)
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
             yield return null;
         }
 
-        DoDamage(enemy);
-        StartCoroutine(AttackCooldown());
-
-        yield return new WaitForSeconds(hitSpeedToMove);
-
-        nearMovement.CanMove = true;
-        isRotatingToAttack = false;
-    }
-
-    private void DoDamage(Transform enemyTransform)
-    {
-        Enemy enemy = enemyTransform.GetComponent<Enemy>();
-        if (enemy != null)
+        if (slashEffect != null && attackHitPoint != null)
         {
-            float finaldamage = damage;
-            enemy.TakeDamage(finaldamage);
+            Quaternion spawnRotation = Quaternion.LookRotation(-transform.forward);
+            var slash = Instantiate(slashEffect, attackHitPoint.position, spawnRotation);
+            slash.transform.rotation = spawnRotation;
+            Destroy(slash, slashDuration);
         }
 
-        if (hitEffect != null)
+        if (Physics.Raycast(attackHitPoint.position, transform.forward, out hit, attackRange, enemyLayer))
         {
-            Instantiate(hitEffect, enemyTransform.position, Quaternion.identity);
+            var enemy = hit.collider.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(damage);
+                if (hitEffect != null)
+                    Instantiate(hitEffect, hit.point, Quaternion.identity);
+                Debug.Log($"Has golpeado a {enemy.name} por {damage} de daño.");
+            }
         }
 
-        if (slashEffect != null)
-        {
-            Vector3 spawnPosition = attackHitPoint.position;
-            Quaternion spawnRotation = Quaternion.LookRotation(transform.forward) * Quaternion.Euler(0, 180f, 0);
-
-            GameObject effect = Instantiate(slashEffect, spawnPosition, spawnRotation);
-            Destroy(effect, attackCooldownTime -0.5f);
-        }
-
-        Debug.Log($"Ataque exitoso a {enemyTransform.name} con {damage} de daño.");
-    }
-
-    private IEnumerator AttackCooldown()
-    {
-        canAttack = false;
         yield return new WaitForSeconds(attackCooldownTime);
+        if (nearMovement != null)
+            nearMovement.CanRotate = true;
         canAttack = true;
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         if (attackHitPoint != null)
         {
@@ -133,23 +98,18 @@ public class Attack : MonoBehaviour
         }
     }
 
-    public float AttackDamage
+    private void DrawCircle(Vector3 center, float radius, Vector3 normal, int segments = 64)
     {
-        get { return damage; }
-        set { damage = value; }
-    }
-
-    private void DrawCircle(Vector3 center, float radius, Vector3 normal, int segmentos = 64)
-    {
-        Quaternion rot = Quaternion.FromToRotation(Vector3.up, normal.normalized);
-        Vector3 prevPoint = center + rot * (Vector3.forward * radius);
-
-        for (int i = 1; i <= segmentos; i++)
+        var rot = Quaternion.FromToRotation(Vector3.up, normal.normalized);
+        Vector3 prev = center + rot * (Vector3.forward * radius);
+        for (int i = 1; i <= segments; i++)
         {
-            float angle = 360f * i / segmentos;
-            Vector3 newPoint = center + rot * (Quaternion.Euler(0f, angle, 0f) * Vector3.forward * radius);
-            Gizmos.DrawLine(prevPoint, newPoint);
-            prevPoint = newPoint;
+            float angle = 360f * i / segments;
+            Vector3 curr = center + rot * (Quaternion.Euler(0, angle, 0) * Vector3.forward * radius);
+            Gizmos.DrawLine(prev, curr);
+            prev = curr;
         }
     }
+
+    public float AttackDamage { get => damage; set => damage = value; }
 }

@@ -48,6 +48,7 @@ public class DolorAtaquesManager : MonoBehaviour
     [SerializeField] private float attack1Radius; //Radio de ataque del ataque 1
     private bool attack1OnCooldown = false;
     [SerializeField] private Image attack1CooldownImage; //Imagen de cooldown del ataque 1
+    [SerializeField] private GameObject attack1UI; //UI del ataque 1
     [SerializeField] private GameObject attack1Effect; //Efectos del ataque 1
     private GameObject attack1Effect1;
     private GameObject attack1Effect2;
@@ -66,6 +67,7 @@ public class DolorAtaquesManager : MonoBehaviour
     [SerializeField] Vector3 boxSize = new Vector3(1f, 1f, 1f); //Tamaño del area de ataque del ataque 2
     private bool attack2OnCooldown = false;
     [SerializeField] private Image attack2CooldownImage; //Imagen de cooldown del ataque 2
+    [SerializeField] private GameObject attack2UI; //UI del ataque 2
     [SerializeField] private GameObject attack2Effect; //Efectos del ataque 2
     private GameObject attack2Effect1;
     #endregion
@@ -82,6 +84,7 @@ public class DolorAtaquesManager : MonoBehaviour
     [SerializeField] private Vector3 boxSize3 = new Vector3(1f, 1f, 1f); //Tamaño del area de ataque del ataque 3
     private bool attack3OnCooldown = false;
     [SerializeField] private Image attack3CooldownImage; //Imagen de cooldown del ataque 3
+    [SerializeField] private GameObject attack3UI; //UI del ataque 3    
     [SerializeField] private GameObject attack3Effect; //Efectos del ataque 3
     private GameObject attack3Effect1;
     #endregion
@@ -98,22 +101,11 @@ public class DolorAtaquesManager : MonoBehaviour
     [SerializeField] private Vector3 boxSize4 = new Vector3(1f, 1f, 1f); //Tamaño del area de ataque del ataque 4
     private bool attack4OnCooldown = false;
     [SerializeField] private Image attack4CooldownImage; //Imagen de cooldown del ataque 4
+    [SerializeField] private GameObject attack4UI; //UI del ataque 4
     [SerializeField] private GameObject attack4Effect; //Efectos del ataque 4
     private GameObject attack4Effect1;
     #endregion
 
-    #endregion
-
-    #region Teclas de Ataques de Dolor EX y Valores
-    //[Header("Ataques EX :")]
-    //[Header("Ataque 1 (Cercle de souffrance) [Tour inquiétant]")]
-    //#region Teclas Ataque 1 (Cercle de souffrance) [Tour inquiétant]
-    //[SerializeField] private float attack1exDamage; //Daño del ataque 1 EX
-    //[SerializeField] private float movementSpeedEX; //Velocidad de movimiento del ataque 1 EX
-    //[SerializeField] private float attack1exRadius; //Radio de ataque del ataque 1 EX
-    //[SerializeField] private float attack1exStocksUsed; //Cuantas unidades se usan para el ataque 1 EX
-    //[SerializeField] private float attack1exTime; //Tiempo que dura el ataque 1 EX
-    //#endregion
     #endregion
 
     #region Debug
@@ -136,6 +128,11 @@ public class DolorAtaquesManager : MonoBehaviour
     {
         isDeployed = state;
         Debug.Log("isDeployed = " + isDeployed);
+
+        attack1UI.SetActive(isDeployed);
+        attack2UI.SetActive(isDeployed);
+        attack3UI.SetActive(isDeployed);
+        attack4UI.SetActive(isDeployed);
     }
 
     public void CanDeployDolor(bool state)
@@ -160,7 +157,7 @@ public class DolorAtaquesManager : MonoBehaviour
         particles.Play();
         #endregion
 
-        #region Start Cooldown Images
+        #region Start Cooldown Images y UI
         if (attack1CooldownImage != null)
         {
             attack1CooldownImage.fillAmount = 0;
@@ -177,32 +174,29 @@ public class DolorAtaquesManager : MonoBehaviour
         {
             attack4CooldownImage.fillAmount = 0;
         }
+
+
+        //if (attack1UI != null)
+        //{
+        //    attack1UI.SetActive(false);
+        //}
+        //if (attack2UI != null)
+        //{
+        //    attack2UI.SetActive(false);
+        //}
+        //if (attack3UI != null)
+        //{
+        //    attack3UI.SetActive(false);
+        //}
+        //if (attack4UI != null)
+        //{
+        //    attack4UI.SetActive(false);
+        //}
         #endregion
     }
 
     private void Update()
     {
-
-        //if (Input.GetKeyDown(deployKey) && Input.GetKeyDown(attack1Key) && isDeployed && !attack1OnCooldown && canAttack)
-        //{
-        //    Debug.Log("Ataque combinado 1");
-        //    Attack1Ex();
-        //}
-
-        //if (Input.GetKeyDown(deployKey) && Input.GetKeyDown(attack2Key) && isDeployed && !attack2OnCooldown && canAttack)
-        //{
-        //    Debug.Log("Ataque combinado 2");
-        //}
-
-        //if (Input.GetKeyDown(deployKey) && Input.GetKeyDown(attack3Key) && isDeployed && !attack3OnCooldown && canAttack)
-        //{
-        //    Debug.Log("Ataque combinado 3");
-        //}
-
-        //if (Input.GetKeyDown(deployKey) && Input.GetKeyDown(attack4Key) && isDeployed && !attack4OnCooldown && canAttack)
-        //{
-        //    Debug.Log("Ataque combinado 4");
-        //}
 
         #region Invocar a Dolor
         if (Input.GetKeyDown(deployKey) && Dolor.activeSelf && canAttack && !Input.GetKeyDown(attack1Key) && !Input.GetKeyDown(attack2Key) && !Input.GetKeyDown(attack3Key) && !Input.GetKeyDown(attack4Key))
@@ -424,11 +418,6 @@ public class DolorAtaquesManager : MonoBehaviour
         Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
         #endregion
 
-        //#region Ataque 1 Ex Gizmos
-        //Gizmos.matrix = Matrix4x4.identity;  // **¡MUY IMPORTANTE: reset antes del círculo!**
-        //Gizmos.color = Color.red;
-        //DrawCircle(transform.position, attack1exRadius, Vector3.up);
-        //#endregion
 
     }
 
@@ -675,53 +664,6 @@ public class DolorAtaquesManager : MonoBehaviour
     }
     #endregion
 
-
-//    private void Attack1Ex()
-//    {
-//        canAttack = false;
-
-//        Dolor.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
-
-//        StartCoroutine(Attack1EX());
-//    }
-
-//    private IEnumerator Attack1EX()
-//{
-//    float time = 0f;
-//    float angle = 0f;
-//    Vector3 centro = transform.position;
-//    HashSet<Enemy> enemiesHit = new HashSet<Enemy>();
-
-//    while (time < attack1exTime)
-//    {
-//        time += Time.deltaTime;
-//        angle += movementSpeedEX * Time.deltaTime;
-
-//        Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.up);
-//        Vector3 dir = rotation * Vector3.forward;
-
-//        Vector3 currentPosition = centro + dir * attack1exRadius;
-//        Dolor.transform.position = currentPosition;
-
-//        Collider[] hits = Physics.OverlapSphere(currentPosition, 1f);
-//        foreach (Collider hit in hits)
-//        {
-//            Enemy enemy = hit.GetComponent<Enemy>();
-//            if (enemy != null && !enemiesHit.Contains(enemy))
-//            {
-//                enemy.TakeDamage(attack1exDamage);
-//                enemiesHit.Add(enemy);
-//            }
-//        }
-
-//        yield return null;
-//    }
-
-//    canAttack = true;
-//    dolorManager.UnidadesValor -= attack1exStocksUsed;
-//    attack1Cooldown = 0;
-//    attack1OnCooldown = true;
-//}
 
     private void DrawCircle(Vector3 center, float radius, Vector3 normal, int segmentos = 64)
     {
