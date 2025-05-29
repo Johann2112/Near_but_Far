@@ -3573,20 +3573,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2243522619051800469, guid: adf0db9e3a2cf9f47b1a8e0752a79fab, type: 3}
   m_PrefabInstance: {fileID: 1639827050}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1427172644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1427172639}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 503f33d76c287c94db0e6fb1b49b060c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Near: {fileID: 1457291349}
-  heightOffset: 0.75
 --- !u!1 &1445494215
 GameObject:
   m_ObjectHideFlags: 0
@@ -4420,13 +4406,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5551810325176667742, guid: adf0db9e3a2cf9f47b1a8e0752a79fab, type: 3}
+      propertyPath: Near
+      value: 
+      objectReference: {fileID: 1457291349}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2243522619051800469, guid: adf0db9e3a2cf9f47b1a8e0752a79fab, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1427172644}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: adf0db9e3a2cf9f47b1a8e0752a79fab, type: 3}
 --- !u!1 &1685364973
 GameObject:
@@ -5044,7 +5031,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -5075,7 +5062,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 118.53601, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
