@@ -4,6 +4,7 @@ using UnityEngine;
 using static UnityEngine.ParticleSystem;
 using static UnityEngine.Rendering.DebugUI;
 using TMPro;
+using UnityEngine.UI;
 
 public class DolorMundoDeAmorYDolorManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class DolorMundoDeAmorYDolorManager : MonoBehaviour
     [SerializeField] private float Recarga;
 
     [SerializeField] private TextMeshProUGUI UnidadesText;
+    [SerializeField] private Image UnidadesImage;
     private bool Max;
     private bool OnCooldown = false;
 
@@ -41,6 +43,7 @@ public class DolorMundoDeAmorYDolorManager : MonoBehaviour
     private void Update()
     {
         UnidadesText.text = Unidades.ToString("0");
+        UnidadesImage.fillAmount = Unidades / UnidadesMax;
 
         if (Dolor != null && Dolor.activeInHierarchy)
         {
@@ -53,7 +56,6 @@ public class DolorMundoDeAmorYDolorManager : MonoBehaviour
         }
         else
         {
-
             dolorAtaquesManager.SetDeployed(false);
             if (OnCooldown)
             {
@@ -86,8 +88,6 @@ public class DolorMundoDeAmorYDolorManager : MonoBehaviour
             var colorModule = particles.main;
             colorModule.startColor = colorActual;
         }
-
-
     }
 
     public void OnCd()
