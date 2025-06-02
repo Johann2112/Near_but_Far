@@ -25,9 +25,22 @@ public class ProceduralManager : MonoBehaviour
     [SerializeField] private Vector3 spawnOffsetLine2; //segundo cambio de offset
     [SerializeField] private Vector3 spawnOffsetLine3;  //tercer cambio de offset
     [SerializeField] private Vector3 spawnOffsetLine4; //cuarto cambio de offset
+    [SerializeField] private Vector3 spawnOffsetLine5; //quinto cambio de offset
+    [SerializeField] private Vector3 spawnOffsetLine6; //sexto cambio de offset
+    [SerializeField] private Vector3 spawnOffsetLine7; //septimo cambio de offset
+    [SerializeField] private Vector3 spawnOffsetLine8; //octavo cambio de offset
+    [SerializeField] private Vector3 spawnOffsetLine9; //noveno cambio de offset
+    [SerializeField] private Vector3 spawnOffsetLine10; //decimo cambio de offset
     [SerializeField] private int amountLine1; // cantidad de objetos en la primera línea antes de cambiar el offset
     [SerializeField] private int amountLine2; // cantidad de objetos en la segunda línea antes de cambiar el offset
     [SerializeField] private int amountLine3; // cantidad de objetos en la tercera línea antes de cambiar el offset
+    [SerializeField] private int amountLine4; // cantidad de objetos en la cuarta línea antes de cambiar el offset
+    [SerializeField] private int amountLine5; // cantidad de objetos en la quinta línea antes de cambiar el offset
+    [SerializeField] private int amountLine6; // cantidad de objetos en la sexta línea antes de cambiar el offset
+    [SerializeField] private int amountLine7; // cantidad de objetos en la septima línea antes de cambiar el offset
+    [SerializeField] private int amountLine8; // cantidad de objetos en la octava línea antes de cambiar el offset
+    [SerializeField] private int amountLine9; // cantidad de objetos en la novena línea antes de cambiar el offset
+    [SerializeField] private int amountLine10; // cantidad de objetos en la decima línea antes de cambiar el offset
 
 
     private void Start()
@@ -124,9 +137,33 @@ public class ProceduralManager : MonoBehaviour
                 {
                     currentPos += spawnOffsetLine3;
                 }
-                else
+                else if(spawnedAmount < amountLine4)
                 {
                     currentPos += spawnOffsetLine4;
+                }
+                else if (spawnedAmount < amountLine5)
+                {
+                    currentPos += spawnOffsetLine5;
+                }
+                else if (spawnedAmount < amountLine6)
+                {
+                    currentPos += spawnOffsetLine6;
+                }
+                else if (spawnedAmount < amountLine7)
+                {
+                    currentPos += spawnOffsetLine7;
+                }
+                else if (spawnedAmount < amountLine8)
+                {
+                    currentPos += spawnOffsetLine8;
+                }
+                else if (spawnedAmount < amountLine9)
+                {
+                    currentPos += spawnOffsetLine9;
+                }
+                else if (spawnedAmount < amountLine10)
+                {
+                    currentPos += spawnOffsetLine10;
                 }
             }
         }
