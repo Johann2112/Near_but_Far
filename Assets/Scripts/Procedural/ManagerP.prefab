@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7425479299857971170
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5026644460433205560}
+  - component: {fileID: 2815184757419592568}
+  m_Layer: 0
+  m_Name: ManagerP
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5026644460433205560
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7425479299857971170}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2815184757419592568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7425479299857971170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab070abc6106fb24daba6348ce2c0e74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  platSafe:
+  - {fileID: 3774271120559035595, guid: 73bc69abb9150d54e90ca7e5b1023099, type: 3}
+  platNeutral:
+  - {fileID: 1477915271449817865, guid: 128727ae15dd86f4fa1fc9df5589b3c3, type: 3}
+  platDanger:
+  - {fileID: 667817241758626181, guid: da77f3e805d481d47bbf4b5b02de6794, type: 3}
+  spawnAmount: 30
+  spawnedAmount: 0
+  amountToChangeOffset: 0
+  spawnOffset: {x: 5, y: 0, z: 5}
+  spawnOffsetChange: {x: 8, y: 0, z: 0}
+  spawnOffsetLine1: {x: 8, y: 0, z: 0}
+  spawnOffsetLine2: {x: 8, y: 0, z: 8}
+  spawnOffsetLine3: {x: 0, y: 0, z: 8}
+  spawnOffsetLine4: {x: -8, y: 0, z: 8}
+  spawnOffsetLine5: {x: 9, y: 0, z: 8}
+  spawnOffsetLine6: {x: 0, y: 0, z: 8}
+  spawnOffsetLine7: {x: -8, y: 0, z: 8}
+  spawnOffsetLine8: {x: -8, y: 0, z: 0}
+  spawnOffsetLine9: {x: -8, y: 0, z: -8}
+  spawnOffsetLine10: {x: 8, y: 0, z: 8}
+  amountLine1: 4
+  amountLine2: 6
+  amountLine3: 8
+  amountLine4: 10
+  amountLine5: 12
+  amountLine6: 14
+  amountLine7: 16
+  amountLine8: 19
+  amountLine9: 25
+  amountLine10: 30

@@ -71,15 +71,23 @@ public class Attack : MonoBehaviour
             Destroy(slash, slashDuration);
         }
 
-        if (Physics.Raycast(attackHitPoint.position, transform.forward, out hit, attackRange, enemyLayer))
+        Collider[] hits = Physics.OverlapSphere(attackHitPoint.position, attackRange, enemyLayer);
+        foreach (var h in hits)
         {
-            var enemy = hit.collider.GetComponent<Enemy>();
-            if (enemy != null)
+            Vector3 directionToTarget = (h.transform.position - transform.position);
+            directionToTarget.y = 0f; // Ignorar altura para el ángulo
+            float angle = Vector3.Angle(transform.forward, directionToTarget);
+
+            if (angle <= attackAngle / 2f)
             {
-                enemy.TakeDamage(damage);
-                if (hitEffect != null)
-                    Instantiate(hitEffect, hit.point, Quaternion.identity);
-                Debug.Log($"Has golpeado a {enemy.name} por {damage} de daño.");
+                Enemy enemy = h.GetComponent<Enemy>();
+                if (enemy != null)
+                {
+                    enemy.TakeDamage(damage);
+                    if (hitEffect != null)
+                        Instantiate(hitEffect, h.ClosestPoint(attackHitPoint.position), Quaternion.identity);
+                    Debug.Log($"Has golpeado a {enemy.name} por {damage} de daño.");
+                }
             }
         }
 

@@ -65,11 +65,11 @@ public class ProceduralManager : MonoBehaviour
 
 
 
-        Generate();
+
     }
 
 
-    private void Generate()
+    public void Generate()
     {
 
         int previousType = 0; //0 = zonas seguras 1 = zonas neutras 2 = zonas peligrosas 
@@ -168,7 +168,13 @@ public class ProceduralManager : MonoBehaviour
             }
         }
 
-
+        
     
+    }
+
+    public int spawnAmounts
+    {
+        get { return spawnAmount; }
+        set { spawnAmount = value; } 
     }
 }
