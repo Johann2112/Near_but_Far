@@ -1,0 +1,50 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class ProceduralSpawn : MonoBehaviour
+{
+    [SerializeField] private List<GameObject> spawnableObjects = new List<GameObject>();
+    [SerializeField] private int minAmount = 0;
+    [SerializeField] private int maxAmount = 0;
+    [SerializeField] private BoxCollider spawnArea;
+    [SerializeField] private float offsetY = 1f;
+
+    private void Start()
+    {
+        if (spawnableObjects.Count == 0)
+        {
+            Debug.LogWarning("No objects to spawn!");
+            return;
+        }
+
+        if (spawnArea == null)
+        {
+            Debug.LogWarning("Spawn area not set!");
+            return;
+        }
+
+        int amountToSpawn = Random.Range(minAmount, maxAmount + 1);
+        for (int i = 0; i < amountToSpawn; i++)
+        {
+            int randomIndex = Random.Range(0, spawnableObjects.Count);
+            GameObject objectToSpawn = spawnableObjects[randomIndex];
+
+            Vector3 randomPos;
+
+            Vector3 boundsMin = spawnArea.bounds.min;
+            Vector3 boundsMax = spawnArea.bounds.max;
+
+            float randomX = Random.Range(boundsMin.x, boundsMax.x);
+            float randomZ = Random.Range(boundsMin.z, boundsMax.z);
+
+            randomPos = new Vector3(randomX, transform.position.y + offsetY, randomZ);
+
+
+
+            Quaternion randomRotation = Quaternion.Euler(Random.Range(0f, 360f), 0f, 0f);
+
+            Instantiate(objectToSpawn, randomPos, randomRotation);
+        }
+    }
+}
