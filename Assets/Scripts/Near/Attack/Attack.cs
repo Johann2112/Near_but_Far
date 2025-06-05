@@ -35,28 +35,37 @@ public class Attack : MonoBehaviour
     {
         canAttack = false;
         if (nearMovement != null)
-            nearMovement.CanRotate = false;
+        { nearMovement.CanRotate = false; }
+            
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         Vector3 targetPoint;
 
-        if (Physics.Raycast(ray, out hit, 100f))
+        if (Physics.Raycast(ray, out hit, 100f, enemyLayer | LayerMask.GetMask("Floor")))
         {
             targetPoint = hit.point;
         }
         else
         {
-            var ground = new Plane(Vector3.up, transform.position);
-            if (ground.Raycast(ray, out float enter))
-                targetPoint = ray.GetPoint(enter);
-            else
-                targetPoint = transform.position + transform.forward * attackRange;
+            Debug.LogWarning("No se encontro lugar para atacar");
+            if (nearMovement != null)
+                nearMovement.CanRotate = true;
+            canAttack = true;
+            yield break;
         }
 
-        Vector3 dir = (targetPoint - transform.position);
-        dir.y = 0;
-        var targetRot = Quaternion.LookRotation(dir);
+        Vector3 dir = targetPoint - transform.position;
+        dir.y = 0f;
+        if (dir.sqrMagnitude < 0.01f)
+        {
+            if (nearMovement != null)
+                nearMovement.CanRotate = true;
+            canAttack = true;
+            yield break;
+        }
+
+        Quaternion targetRot = Quaternion.LookRotation(dir);
         while (Quaternion.Angle(transform.rotation, targetRot) > 1f)
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
@@ -75,7 +84,7 @@ public class Attack : MonoBehaviour
         foreach (var h in hits)
         {
             Vector3 directionToTarget = (h.transform.position - transform.position);
-            directionToTarget.y = 0f; // Ignorar altura para el ángulo
+            directionToTarget.y = 0f;
             float angle = Vector3.Angle(transform.forward, directionToTarget);
 
             if (angle <= attackAngle / 2f)

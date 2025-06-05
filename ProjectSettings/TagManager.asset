@@ -8,6 +8,7 @@ TagManager:
   - Frag1
   - Frag2
   - Frag3
+  - Objeto
   layers:
   - Default
   - TransparentFX

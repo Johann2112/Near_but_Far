@@ -6,14 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/FP.unity
-    guid: e106dc40c63b60347a7e78943e96a4ce
-  - enabled: 1
     path: Assets/Scenes/Menu.unity
     guid: ae59840045470094e8d335732f9d84ae
   - enabled: 1
     path: Assets/Scenes/Options.unity
     guid: 5f4eb372eeca7694fb7032c71942dd72
+  - enabled: 1
+    path: Assets/Scenes/Creditos.unity
+    guid: eb4946d927b08814790013858ed25192
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: bda4882f8df8bd34fa1314fd703bd930
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 289c1b55c9541489481df5cc06664110, type: 3}
   m_UseUCBPForAssetBundles: 0

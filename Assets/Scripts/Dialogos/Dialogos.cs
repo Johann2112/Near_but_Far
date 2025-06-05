@@ -21,7 +21,7 @@ public class Dialogos : MonoBehaviour
 
     private void Update()
     {
-        if (isDialogActive && Input.GetKeyDown(KeyCode.Space))
+        if (isDialogActive && Input.GetMouseButtonDown(0))
         {
             NextLine();
         }
@@ -30,7 +30,9 @@ public class Dialogos : MonoBehaviour
 
     private void Start()
     {
-        StartDialogue(currentDialogAtMoment);
+        dialoguePanel.SetActive(false);
+        character1Object.SetActive(false);
+        character2Object.SetActive(false);
     }
 
     public void StartDialogue(int actualLine)
@@ -43,12 +45,13 @@ public class Dialogos : MonoBehaviour
         currentDialogAtMoment = actualLine;
         currentLineAtMoment = 0;
         isDialogActive = true;
+
+        Time.timeScale = 0f;
+
         dialoguePanel.SetActive(true);
         character1Object.SetActive(true);
         character2Object.SetActive(true);
         ShowLine();
-
-
     }
 
     private void ShowLine()
@@ -93,6 +96,9 @@ public class Dialogos : MonoBehaviour
         dialoguePanel.SetActive(false);
         character1Object.SetActive(false);
         character2Object.SetActive(false);
+
+        Time.timeScale = 1f;
+
         dialogueList[currentDialogAtMoment].onDialogueEnd?.Invoke();
     }
 

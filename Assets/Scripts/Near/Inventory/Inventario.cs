@@ -145,7 +145,7 @@ public class Inventario : MonoBehaviour
         {
             rencorFragmentadoAmount++;
 
-            //Destroy(other);
+            Destroy(other.gameObject);
         }
         #endregion
 
@@ -153,7 +153,7 @@ public class Inventario : MonoBehaviour
         if (other.CompareTag("Frag2"))
         {
             lutoFragmentadoAmount++;
-            //Destroy(other);
+            Destroy(other.gameObject);
         }
         #endregion
 
@@ -161,7 +161,7 @@ public class Inventario : MonoBehaviour
         if (other.CompareTag("Frag3"))
         {
             desesperacionFragmentadaAmount++;
-            //Destroy(other);
+            Destroy(other.gameObject);
         }
         #endregion
     }

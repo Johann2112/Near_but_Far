@@ -15,29 +15,27 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected Rigidbody rb;
     [SerializeField] protected LayerMask groundLayer;
     [SerializeField] protected float groundCheckDistance = 0.2f;
-    [SerializeField] private bool canMove = true;
-
+    [SerializeField] protected bool canMove = true;
     protected bool isCheckingGround = false;
     protected bool isBeingPulled = false;
-    [SerializeField] private bool isLaunching;
+    [SerializeField] protected bool isLaunching;
 
-    [SerializeField] private float visionRange = 10f;
-    [SerializeField] private float moveSpeed = 3f;
-    [SerializeField] private float rotationSpeed = 5f;
-    [SerializeField] private float attackRange = 1.5f;
+    [SerializeField] protected float visionRange = 10f;
+    [SerializeField] protected float moveSpeed = 3f;
+    [SerializeField] protected float rotationSpeed = 5f;
+    [SerializeField] protected float attackRange = 1.5f;
 
-    [SerializeField] private float attackCooldownTime = 1.5f;
-    [SerializeField] private float attackDamage = 15f;
-    [SerializeField] private float attackAngle = 120f;
-    [SerializeField] private Transform attackHitPoint;
-    [SerializeField] private GameObject slashEffect;
-    [SerializeField] private GameObject hitEffect;
-    [SerializeField] private float hitSpeedToMove = 0.5f;
+    [SerializeField] protected float attackCooldownTime = 1.5f;
+    [SerializeField] protected float attackDamage = 15f;
+    [SerializeField] protected float attackAngle = 120f;
+    [SerializeField] protected Transform attackHitPoint;
+    [SerializeField] protected GameObject slashEffect;
+    [SerializeField] protected GameObject hitEffect;
+    [SerializeField] protected float hitSpeedToMove = 0.5f;
 
-    private bool canAttack = true;
-    private bool isRotatingToAttack = false;
-
-    private Transform player;
+    protected bool canAttack = true;
+    protected bool isRotatingToAttack = false;
+    protected Transform player;
 
     public virtual void TakeDamage(float amount)
     {
@@ -139,7 +137,7 @@ public class Enemy : MonoBehaviour
         StartCoroutine(enumerato());
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected void OnCollisionEnter(Collision collision)
     {
         if (rb.isKinematic) return;
 
@@ -204,7 +202,7 @@ public class Enemy : MonoBehaviour
 
 
 
-    private void FollowPlayer()
+    protected virtual void FollowPlayer()
     {
         Vector3 direction = (player.position - transform.position).normalized;
         direction.y = 0;
@@ -222,7 +220,11 @@ public class Enemy : MonoBehaviour
 
     private void TryAttack(Transform target)
     {
-        if (!canAttack || isRotatingToAttack) return;
+        if (!canAttack || isRotatingToAttack)
+        {
+            return;
+
+        }
 
         Vector3 directionToTarget = (target.position - transform.position).normalized;
         float angle = Vector3.Angle(transform.forward, directionToTarget);
