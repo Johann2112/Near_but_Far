@@ -52,7 +52,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _FadeD: 9.4
-    - _OutThi: 0.015
+    - _OutThi: 0.01
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
