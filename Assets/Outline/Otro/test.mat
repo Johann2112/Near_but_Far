@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 3dOutPilar
-  m_Shader: {fileID: -6465566751694194690, guid: eb0861471b433ac47999a474b1544b57, type: 3}
+  m_Name: test
+  m_Shader: {fileID: -6465566751694194690, guid: 14e3816ae7956084d9b07cb014f13d81, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -38,15 +38,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Outline_Thickness: 0.0125
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Size: 0.55
     m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 0}
-    - _PivotOffset: {r: 0, g: -0.66, b: 0, a: 0}
+    - _Outline_Color: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &567237181871022295
+--- !u!114 &5239574895404413024
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
